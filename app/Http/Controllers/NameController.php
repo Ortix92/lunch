@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\LunchList;
 use App\Name;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -125,6 +127,13 @@ class NameController extends Controller
 
     private function createList()
     {
-        
+        $lists = LunchList::all();
+        if ($lists->isEmpty()) {
+            $list = new LunchList();
+        } else {
+            $list = $lists->last();
+        }
+        $list->opened_on = Carbon::now();
+        $list->save();
     }
 }

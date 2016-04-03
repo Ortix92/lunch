@@ -18,10 +18,10 @@ class AddTables extends Migration
         });
         Schema::create('lists', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('description');
-            $table->boolean('closed');
+            $table->text('description')->nullable();
+            $table->boolean('closed')->nullable();
             $table->timestamp('opened_on');
-            $table->timestamp('closed_on');
+            $table->timestamp('closed_on')->nullable();
         });
         Schema::create('list_name', function (Blueprint $table) {
             $table->integer('list_id');
