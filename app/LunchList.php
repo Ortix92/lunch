@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class LunchList extends Model
 {
+    const CREATED_AT = 'opened_on';
+    const UPDATED_AT = 'updated_on';
     protected $table = 'lists';
-    public $timestamps = false;
+//    public $timestamps = false;
 
     public function names()
     {
@@ -19,4 +21,5 @@ class LunchList extends Model
     {
         return Carbon::parse($value)->format('l F jS');
     }
+
 }

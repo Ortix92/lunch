@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\LunchList;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+/**
+ * Class LunchListController
+ * In this class we always automatically create a lunchlist. Instead, we store and update the names in the lunchlist
+ * @package App\Http\Controllers
+ */
 class LunchListController extends Controller
 {
     /**
@@ -17,7 +23,7 @@ class LunchListController extends Controller
      */
     public function index()
     {
-        return view('lunchlist', ['lists' => LunchList::all()]);
+        return view('lunchlist.index', ['lists' => LunchList::all()]);
     }
 
     /**
@@ -27,7 +33,19 @@ class LunchListController extends Controller
      */
     public function create()
     {
-        //
+        \DB::connection()->enableQueryLog();
+        $q = LunchList::where('opened_on', '=', date('now'))->get(); // needs fixing
+        dd($q);
+        dd(\DB::getQueryLog());
+        if ($q->isEmpty()) {
+            $lunchlist = new LunchList;
+            $lunchlist->save();
+        } else {
+            $lunchlist = $q->first();
+        }
+        dd($lunchlist);
+        return view('lunchlist.edit', compact('lunchlist'));
+
     }
 
     /**
@@ -36,8 +54,10 @@ class LunchListController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public
+    function store(
+        Request $request
+    ) {
         //
     }
 
@@ -47,9 +67,11 @@ class LunchListController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public
+    function show(
+        $id
+    ) {
+        return view('lunchlist.edit');
     }
 
     /**
@@ -58,9 +80,11 @@ class LunchListController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public
+    function edit(
+        $id
+    ) {
+        return view('lunchlist.edit');
     }
 
     /**
@@ -70,8 +94,11 @@ class LunchListController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public
+    function update(
+        Request $request,
+        $id
+    ) {
         //
     }
 
@@ -81,8 +108,10 @@ class LunchListController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public
+    function destroy(
+        $id
+    ) {
         //
     }
 }
