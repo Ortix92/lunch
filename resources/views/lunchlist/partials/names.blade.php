@@ -11,7 +11,8 @@
             <th>&nbsp;</th>
             </thead>
             <tbody>
-            @foreach ($names as $name)
+
+            @foreach ($lunchlist->names as $name)
                 <tr>
                     <td class="table-text">
                         <div>{{ $name->name }}</div>
@@ -22,7 +23,7 @@
 
                     <!-- Task Delete Button -->
                     <td>
-                        <form action="/name/{{ $name->id }}" method="POST">
+                        <form action="{{route('name.destroy',[$name->id, 'list_id'=>$lunchlist->id])}}" method="POST">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
 

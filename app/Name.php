@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Name extends Model
 {
-    public function lunchList() {
-        return $this->belongsTo('App\LunchList');
+    protected $fillable = ['name', 'persist'];
+
+    public function lunchLists()
+    {
+        return $this->belongsToMany('App\LunchList', 'list_name', 'name_id', 'list_id');
     }
 }

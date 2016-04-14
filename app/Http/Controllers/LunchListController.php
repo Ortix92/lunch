@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests;
 use App\LunchList;
+use App\Name;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 /**
  * Class LunchListController
@@ -33,17 +32,16 @@ class LunchListController extends Controller
      */
     public function create()
     {
-        \DB::connection()->enableQueryLog();
-        $q = LunchList::where('opened_on', '=', date('now'))->get(); // needs fixing
-        dd($q);
-        dd(\DB::getQueryLog());
+        // Get today's lunchlist if it exists. Otherwise create it.
+        $q = LunchList::where('opened_at', '>=', Carbon::today())->with('names')->get();
+
         if ($q->isEmpty()) {
             $lunchlist = new LunchList;
             $lunchlist->save();
         } else {
             $lunchlist = $q->first();
         }
-        dd($lunchlist);
+
         return view('lunchlist.edit', compact('lunchlist'));
 
     }
@@ -54,11 +52,13 @@ class LunchListController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public
-    function store(
-        Request $request
-    ) {
-        //
+    public function store(Request $request)
+    {
+        $lunchlist = LunchList::findorFail($request->input('id'));
+
+        $name = Name::firstOrNew(['name' => $request->input('name')]);
+        $lunchlist->names()->save($name);
+        return view('lunchlist.edit', compact('lunchlist'));
     }
 
     /**
@@ -67,11 +67,10 @@ class LunchListController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public
-    function show(
-        $id
-    ) {
-        return view('lunchlist.edit');
+    public function show($id)
+    {
+        $lunchlist = LunchList::findOrFail($id)->first();
+        return view('lunchlist.edit',compact('lunchlist'));
     }
 
     /**
@@ -80,10 +79,8 @@ class LunchListController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public
-    function edit(
-        $id
-    ) {
+    public function edit($id)
+    {
         return view('lunchlist.edit');
     }
 
@@ -94,11 +91,8 @@ class LunchListController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public
-    function update(
-        Request $request,
-        $id
-    ) {
+    public function update(Request $request, $id)
+    {
         //
     }
 
@@ -108,10 +102,8 @@ class LunchListController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public
-    function destroy(
-        $id
-    ) {
-        //
+    public function destroy($id)
+    {
+        
     }
 }

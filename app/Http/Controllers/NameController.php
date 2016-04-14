@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\LunchList;
-use App\Name;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Name;
+use Illuminate\Http\Request;
 
 class NameController extends Controller
 {
@@ -119,21 +115,14 @@ class NameController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $this->name->findOrFail($id)->delete();
-        return redirect('/name');
+        \DB::connection()->enableQueryLog();
+        $name = $this->name->findOrFail($id)->first();
+        $name->lunchLists()->detach($request->list_id);
+        dd(\DB::getQueryLog());
+
+        return redirect()->route('lunchlist.show', ['lunch_id' => $request->list_id]);
     }
 
-    private function createList()
-    {
-        $lists = LunchList::all();
-        if ($lists->isEmpty()) {
-            $list = new LunchList();
-        } else {
-            $list = $lists->last();
-        }
-        $list->opened_on = Carbon::now();
-        $list->save();
-    }
 }

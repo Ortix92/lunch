@@ -36,6 +36,7 @@
                     </button>
                 </div>
             </div>
+            <input name="id" type="hidden" value="{{$lunchlist->id}}"/>
         </form>
     </div>
 </div>

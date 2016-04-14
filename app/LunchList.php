@@ -12,9 +12,12 @@ class LunchList extends Model
     protected $table = 'lists';
 //    public $timestamps = false;
 
+    protected $fillable = ['description', 'closed', 'closed_on', 'veggy'];
+
+
     public function names()
     {
-        return $this->hasMany('App\Name');
+        return $this->belongsToMany('App\Name','list_name','list_id','name_id');
     }
 
     public function getOpenedOnAttribute($value)
