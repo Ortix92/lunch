@@ -7,6 +7,7 @@ use App\LunchList;
 use App\Name;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class LunchListController
@@ -32,15 +33,26 @@ class LunchListController extends Controller
      */
     public function create()
     {
-        // Get today's lunchlist if it exists. Otherwise create it.
-        $q = LunchList::where('opened_at', '>=', Carbon::today())->with('names')->get();
+        /*
+         * Users::where('name', 'John')->where(function($query){
+        *  $query->where('votes', '>', 100)->orWhere('title', '<>', 'Admin);
+        *  })->get();
+         */
+        // We get the lunchlist of the day which is still open.
+        // If it's already closed an empty collection will be returned allowing us to create a new one!
+        $q = LunchList::whereNull('closed_on')->where([
+            ['opened_at', '>=', Carbon::today()]
+        ])->with('names')->get();
 
         if ($q->isEmpty()) {
+            $persistentNames = DB::table('names')->where('persist', '=', 1)->lists('id');
             $lunchlist = new LunchList;
             $lunchlist->save();
+            $lunchlist->names()->attach($persistentNames);
         } else {
             $lunchlist = $q->first();
         }
+
 
         return view('lunchlist.edit', compact('lunchlist'));
 
@@ -57,7 +69,10 @@ class LunchListController extends Controller
         $lunchlist = LunchList::findorFail($request->input('id'));
 
         $name = Name::firstOrNew(['name' => $request->input('name')]);
+        $lunchlist->veggy = $request->input('veggy', 0);
+
         $lunchlist->names()->save($name);
+        $lunchlist->save();
         return view('lunchlist.edit', compact('lunchlist'));
     }
 
@@ -67,33 +82,30 @@ class LunchListController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $lunchlist = LunchList::findOrFail($id)->first();
-        return view('lunchlist.edit',compact('lunchlist'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        return view('lunchlist.edit');
+        $lunchlist = LunchList::findOrFail($id);
+
+        return view('lunchlist.edit', compact('lunchlist'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * This method is not used. It's always the show() method so we redirect to the 'show' route
      *
-     * @param  \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function show($id)
     {
-        //
+        return redirect()->route('lunchlist.edit', [$id]);
+    }
+
+    public function close($id)
+    {
+        $lunchlist = LunchList::findOrFail($id);
+        $lunchlist->close();
+        $lunchlist->save();
+        return redirect()->route('lunchlist.show', [$id]);
     }
 
     /**
@@ -104,6 +116,6 @@ class LunchListController extends Controller
      */
     public function destroy($id)
     {
-        
+
     }
 }

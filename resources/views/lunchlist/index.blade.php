@@ -9,7 +9,7 @@
                 <a href="{{route('lunchlist.create')}}" class="btn btn-primary btn-block btn-lg">New Lunch List</a>
             </p>
             <div class="panel panel-default">
-                <div class="panel-heading">Panel heading</div>
+                <div class="panel-heading">Lunch List Overview</div>
                 <table class="table">
                     <thead>
                     <tr>
@@ -24,9 +24,9 @@
                     @foreach($lists as $list)
                         <tr>
                             <th scope="row">{{$list->id}}</th>
-                            <td>{{($list->opened_on)}}</td>
+                            <td><a href="{{route('lunchlist.edit',[$list->id])}}">{{$list->opened_on}}</a></td>
                             <td>{{$list->closed_on}}</td>
-                            {{--                            <td>{{count($list->names)}}</td>--}}
+                            <td>{{count($list->names)}}</td>
                             <td>
                                 @if($list->veggy)
                                     Yes

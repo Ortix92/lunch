@@ -117,10 +117,11 @@ class NameController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        \DB::connection()->enableQueryLog();
         $name = $this->name->findOrFail($id)->first();
+
+        // Remove entry from the pivot table
         $name->lunchLists()->detach($request->list_id);
-        dd(\DB::getQueryLog());
+        $name->delete();
 
         return redirect()->route('lunchlist.show', ['lunch_id' => $request->list_id]);
     }

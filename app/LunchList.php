@@ -3,21 +3,25 @@
 namespace App;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 
-class LunchList extends Model
+class LunchList extends \Eloquent
 {
     const CREATED_AT = 'opened_on';
     const UPDATED_AT = 'updated_on';
     protected $table = 'lists';
-//    public $timestamps = false;
 
+    protected $dates = ['opened_on', 'updated_on', 'closed_on'];
     protected $fillable = ['description', 'closed', 'closed_on', 'veggy'];
 
 
     public function names()
     {
-        return $this->belongsToMany('App\Name','list_name','list_id','name_id');
+        return $this->belongsToMany('App\Name', 'list_name', 'list_id', 'name_id');
+    }
+
+    public function close() {
+        $this->attributes['closed'] = 1;
+        $this->attributes['closed_on'] = Carbon::now();
     }
 
     public function getOpenedOnAttribute($value)

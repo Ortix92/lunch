@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Name extends Model
+class Name extends \Eloquent
 {
     protected $fillable = ['name', 'persist'];
 

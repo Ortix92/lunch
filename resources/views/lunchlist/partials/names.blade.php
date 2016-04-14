@@ -27,9 +27,11 @@
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
 
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fa fa-btn fa-trash"></i>Delete
-                            </button>
+                            @if(!$lunchlist->closed)
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa fa-btn fa-trash"></i>Delete
+                                </button>
+                            @endif
                         </form>
                     </td>
                 </tr>
@@ -38,4 +40,3 @@
         </table>
     </div>
 </div>
-@include('lunchlist.partials.close')

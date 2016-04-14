@@ -24,8 +24,14 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="persist-box">Stay in the list</label>
-                <div class="col-sm-6">
+                <div class="col-sm-2">
                     <input type="checkbox" id="persist-box" name="persist">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="veggy-box">Veggy</label>
+                <div class="col-sm-2">
+                    <input type="checkbox" id="veggy-box" name="veggy" value="1">
                 </div>
             </div>
             <!-- Add Name Button -->

@@ -1,6 +1,6 @@
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-warning btn-lg btn-block" data-toggle="modal" data-target="#verification">
-    <span class="glyphicon glyphicon-lock"></span> Close Lunch List
+    <span class="fa fa-lock"></span> Close Lunch List
 </button>
 
 <!-- Modal -->
@@ -18,8 +18,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Lock that sucker</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                <a href="{{route('lunchlist.close', $lunchlist->id)}}" class="btn btn-primary">Lock that sucker</a>
             </div>
         </div>
     </div>
