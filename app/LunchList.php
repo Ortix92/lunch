@@ -19,7 +19,13 @@ class LunchList extends \Eloquent
         return $this->belongsToMany('App\Name', 'list_name', 'list_id', 'name_id');
     }
 
-    public function close() {
+    public function isVeggy()
+    {
+        return !$this->names()->where('veggy', '=', 1)->get()->isEmpty();
+    }
+
+    public function close()
+    {
         $this->attributes['closed'] = 1;
         $this->attributes['closed_on'] = Carbon::now();
     }

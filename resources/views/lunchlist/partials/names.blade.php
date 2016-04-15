@@ -7,6 +7,7 @@
         <table class="table table-striped task-table">
             <thead>
             <th>Name</th>
+            <th>Veggy</th>
             <th>Signed up at</th>
             <th>&nbsp;</th>
             </thead>
@@ -16,6 +17,11 @@
                 <tr>
                     <td class="table-text">
                         <div>{{ $name->name }}</div>
+                    </td>
+                    <td class="table-text">
+                        @if($name->veggy)
+                            <i class="fa fa-check"></i>
+                        @endif
                     </td>
                     <td class="table-text">
                         <div>{{$name->created_at->toTimeString()}}</div>

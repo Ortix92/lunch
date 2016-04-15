@@ -1,8 +1,9 @@
 <?php
-Route::group(['middleware' => ['web']], function () {
+Route::group(['middleware' => ['web','auth.basic']], function () {
 
     Route::get('test', function () {
-        $lunchlist = \App\LunchList::find(7)->with('names')->first();
+        $lunchlist = \App\LunchList::with('names')->first()->isVeggy();
+        dd($lunchlist);
     });
 
     Route::resource('/', 'LunchListController', ['only' => ['index']]);

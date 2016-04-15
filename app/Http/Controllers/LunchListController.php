@@ -23,7 +23,8 @@ class LunchListController extends Controller
      */
     public function index()
     {
-        return view('lunchlist.index', ['lists' => LunchList::all()]);
+        $lunchlists = LunchList::orderBy('id', 'desc')->with('names')->paginate(10);
+        return view('lunchlist.index', compact('lunchlists'));
     }
 
     /**
@@ -33,29 +34,27 @@ class LunchListController extends Controller
      */
     public function create()
     {
-        /*
-         * Users::where('name', 'John')->where(function($query){
-        *  $query->where('votes', '>', 100)->orWhere('title', '<>', 'Admin);
-        *  })->get();
-         */
+        \DB::connection()->enableQueryLog();
         // We get the lunchlist of the day which is still open.
         // If it's already closed an empty collection will be returned allowing us to create a new one!
-        $q = LunchList::whereNull('closed_on')->where([
-            ['opened_at', '>=', Carbon::today()]
-        ])->with('names')->get();
+        $q = LunchList::where('opened_on', '>=', Carbon::today())->where(function ($query) {
+            $query->whereNull('closed_on')->orWhere('closed', '<>', 1);
+        });
 
-        if ($q->isEmpty()) {
+        // Let's lazy load the names as well to reduce queries
+        $q->with('names');
+        $result = $q->get();
+//        dd(\DB::getQueryLog());
+        if ($result->isEmpty()) {
             $persistentNames = DB::table('names')->where('persist', '=', 1)->lists('id');
             $lunchlist = new LunchList;
             $lunchlist->save();
             $lunchlist->names()->attach($persistentNames);
         } else {
-            $lunchlist = $q->first();
+            $lunchlist = $result->first();
         }
 
-
         return view('lunchlist.edit', compact('lunchlist'));
-
     }
 
     /**
@@ -66,12 +65,26 @@ class LunchListController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request,
+            [
+                'name'    => 'required|max:255',
+                'persist' => 'sometimes|accepted',
+                'veggy'   => 'sometimes|accepted'
+            ], [
+                'persist.accepted' => 'Brah what are you doing?',
+                'veggy.accepted'   => 'Brah what are you doing?',
+            ]
+        );
+
         $lunchlist = LunchList::findorFail($request->input('id'));
 
         $name = Name::firstOrNew(['name' => $request->input('name')]);
-        $lunchlist->veggy = $request->input('veggy', 0);
+        $name->persist = $request->input('persist', 0);
+        $name->veggy = $request->input('veggy', 0);
 
         $lunchlist->names()->save($name);
+
+        // Nothing is actually being saved to the lunchlist model but I'll leave this here for the future
         $lunchlist->save();
         return view('lunchlist.edit', compact('lunchlist'));
     }

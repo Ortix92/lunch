@@ -25,7 +25,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="persist-box">Stay in the list</label>
                 <div class="col-sm-2">
-                    <input type="checkbox" id="persist-box" name="persist">
+                    <input type="checkbox" id="persist-box" name="persist" value="1">
                 </div>
             </div>
             <div class="form-group">

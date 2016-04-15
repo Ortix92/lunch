@@ -21,22 +21,21 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($lists as $list)
+                    @foreach($lunchlists as $list)
                         <tr>
                             <th scope="row">{{$list->id}}</th>
                             <td><a href="{{route('lunchlist.edit',[$list->id])}}">{{$list->opened_on}}</a></td>
                             <td>{{$list->closed_on}}</td>
                             <td>{{count($list->names)}}</td>
                             <td>
-                                @if($list->veggy)
-                                    Yes
-                                @endif
+                                {{$list->names->pluck('veggy')->sum()}}
                             </td>
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
             </div>
+            {!! $lunchlists->links() !!}
         </div>
     </div>
 @endsection
