@@ -86,7 +86,7 @@ class LunchListController extends Controller
 
         // Nothing is actually being saved to the lunchlist model but I'll leave this here for the future
         $lunchlist->save();
-        return view('lunchlist.edit', compact('lunchlist'));
+        return redirect()->route('lunchlist.edit',$lunchlist->id);
     }
 
     /**
