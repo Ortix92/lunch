@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\LunchList;
 use App\Name;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -46,6 +47,11 @@ class LunchListController extends Controller
         $result = $q->get();
 //        dd(\DB::getQueryLog());
         if ($result->isEmpty()) {
+            // Touch timestamps
+            DB::table('names')->where('persist', '=', 1)->update(['created_at' => Carbon::now()]);
+
+            // Get all the persistent names
+            // @todo combine these 2 statements into a single query
             $persistentNames = DB::table('names')->where('persist', '=', 1)->lists('id');
             $lunchlist = new LunchList;
             $lunchlist->save();
@@ -86,7 +92,7 @@ class LunchListController extends Controller
 
         // Nothing is actually being saved to the lunchlist model but I'll leave this here for the future
         $lunchlist->save();
-        return redirect()->route('lunchlist.edit',$lunchlist->id);
+        return redirect()->route('lunchlist.edit', $lunchlist->id);
     }
 
     /**
