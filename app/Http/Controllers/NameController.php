@@ -34,7 +34,6 @@ class NameController extends Controller
 
         // Remove entry from the pivot table
         $name->lunchLists()->detach($request->list_id);
-        $name->delete();
 
         return redirect()->route('lunchlist.show', ['lunch_id' => $request->list_id]);
     }
