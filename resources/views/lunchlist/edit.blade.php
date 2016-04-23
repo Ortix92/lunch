@@ -4,7 +4,7 @@
     <div class="container">
         <div class="col-sm-offset-2 col-sm-8">
             @if($lunchlist->closed)
-                <div class="alert alert-danger alert-dismissible fade in">
+                <div class="secret_button alert alert-danger alert-dismissible fade in">
                     This lunchlist has been closed.
                 </div>
             @else

@@ -8,7 +8,7 @@ $(document).ready(function () {
         }
         $('#textbox1').val($(this).is(':checked'));
     })
-    $("#secret_button").click(function () {
+    $(".secret_button").click(function () {
         i++;
         if (i > 2) {
             $("#delete_button").removeClass("hidden");
