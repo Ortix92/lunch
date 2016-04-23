@@ -1,5 +1,5 @@
 <?php
-Route::group(['middleware' => ['web','auth.basic']], function () {
+Route::group(['middleware' => ['web', 'auth.basic']], function () {
 
     Route::get('test', function () {
         $lunchlist = \App\LunchList::with('names')->first()->isVeggy();
@@ -11,6 +11,10 @@ Route::group(['middleware' => ['web','auth.basic']], function () {
     Route::resource('name', 'NameController');
 
     Route::get('lunchlist/{id}/close', ['as' => 'lunchlist.close', 'uses' => 'LunchListController@close',]);
+    Route::get('logout', function () {
+        Auth::logout();
+        return redirect('/');
+    });
 
     /**
      * @todo remove veggy if veggy person is removed from list

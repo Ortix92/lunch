@@ -5,9 +5,11 @@
         <div class="col-sm-offset-2 col-sm-8">
             <!-- Display Validation Errors -->
             @include('common.errors')
-            <p>
-                <a href="{{route('lunchlist.create')}}" class="btn btn-primary btn-block btn-lg">New Lunch List</a>
-            </p>
+            @if($lunchlists->first()->closed)
+                <p>
+                    <a href="{{route('lunchlist.create')}}" class="btn btn-primary btn-block btn-lg">New Lunch List</a>
+                </p>
+            @endif
             <div class="panel panel-default">
                 <div class="panel-heading">Lunch List Overview</div>
                 <table class="table">

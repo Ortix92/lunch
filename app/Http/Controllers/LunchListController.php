@@ -59,7 +59,6 @@ class LunchListController extends Controller
         } else {
             $lunchlist = $result->first();
         }
-
         return view('lunchlist.edit', compact('lunchlist'));
     }
 
