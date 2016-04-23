@@ -16,6 +16,14 @@
                     @include('lunchlist.partials.close')
                 @endif
             @endif
+            <form action="{{route('lunchlist.destroy', $lunchlist->id)}}" method="POST">
+                {{ csrf_field() }}
+                {{ method_field('DELETE') }}
+
+                <button type="submit" id="delete_button" class="hidden btn btn-danger btn-block btn-lg">
+                    <i class="fa fa-btn fa-trash"></i>DELETE LIST
+                </button>
+            </form>
         </div>
     </div>
 @endsection

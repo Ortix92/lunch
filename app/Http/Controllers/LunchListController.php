@@ -134,6 +134,9 @@ class LunchListController extends Controller
      */
     public function destroy($id)
     {
-
+        $lunchlist = LunchList::findOrFail($id);
+        $lunchlist->names()->detach();
+        $lunchlist->delete();
+        return redirect('/');
     }
 }

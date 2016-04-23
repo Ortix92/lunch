@@ -31,7 +31,8 @@ class NameController extends Controller
     public function destroy($id, Request $request)
     {
         $name = $this->name->findOrFail($id);
-
+        $name->persist = 0;
+        $name->save();
         // Remove entry from the pivot table
         $name->lunchLists()->detach($request->list_id);
 

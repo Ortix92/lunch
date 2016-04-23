@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        Add me to the list
+        <span id="secret_button">Add me to the list</span>
     </div>
 
     <div class="panel-body">

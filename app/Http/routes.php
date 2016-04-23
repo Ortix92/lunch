@@ -2,8 +2,8 @@
 Route::group(['middleware' => ['web', 'auth.basic']], function () {
 
     Route::get('test', function () {
-        $lunchlist = \App\LunchList::with('names')->first()->isVeggy();
-        dd($lunchlist);
+        $lunchlist = \App\LunchList::find(33);
+        dd($lunchlist->names()->detach());
     });
 
     Route::resource('/', 'LunchListController', ['only' => ['index']]);
