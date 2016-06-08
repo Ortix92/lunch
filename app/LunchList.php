@@ -16,7 +16,7 @@ class LunchList extends \Eloquent
 
     public function names()
     {
-        return $this->belongsToMany('App\Name', 'list_name', 'list_id', 'name_id');
+        return $this->belongsToMany('App\Name', 'list_name', 'list_id', 'name_id')->withPivot('note');
     }
 
     public function isVeggy()

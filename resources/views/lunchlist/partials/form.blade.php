@@ -34,6 +34,17 @@
                     <input type="checkbox" id="veggy-box" name="veggy" value="1">
                 </div>
             </div>
+
+            <div class="form-group">
+                <label for="note" class="col-sm-3 control-label">Note</label>
+
+                <div class="col-sm-6">
+                    <input type="text" name="note" id="note" class="form-control"
+                           value="{{ old('notes') }}">
+                </div>
+
+            </div>
+
             <!-- Add Name Button -->
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6">

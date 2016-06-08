@@ -8,6 +8,6 @@ class Name extends \Eloquent
 
     public function lunchLists()
     {
-        return $this->belongsToMany('App\LunchList', 'list_name', 'name_id', 'list_id');
+        return $this->belongsToMany('App\LunchList', 'list_name', 'name_id', 'list_id')->withPivot('note');
     }
 }

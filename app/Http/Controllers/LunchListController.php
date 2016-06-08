@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\LunchList;
 use App\Name;
+use App\Note;
 use Carbon\Carbon;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -48,7 +48,7 @@ class LunchListController extends Controller
 //        dd(\DB::getQueryLog());
         if ($result->isEmpty()) {
             // Touch timestamps
-            DB::table('names')->where('persist', '=', 1)->update(['created_at' => Carbon::now()]);
+            DB::table('names')->where('persist', '=', 1)->update(['updated_at' => Carbon::now()]);
 
             // Get all the persistent names
             // @todo combine these 2 statements into a single query
@@ -83,11 +83,14 @@ class LunchListController extends Controller
 
         $lunchlist = LunchList::findorFail($request->input('id'));
 
+        // Create a new name and fill the attributes
         $name = Name::firstOrNew(['name' => $request->input('name')]);
         $name->persist = $request->input('persist', 0);
         $name->veggy = $request->input('veggy', 0);
+        $name->touch(); // Update timestamp
 
-        $lunchlist->names()->save($name);
+        // Automatically save to pivot table
+        $lunchlist->names()->save($name, ['note' => $request->input('note', '')]);
 
         // Nothing is actually being saved to the lunchlist model but I'll leave this here for the future
         $lunchlist->save();

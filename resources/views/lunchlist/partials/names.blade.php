@@ -8,7 +8,8 @@
             <thead>
             <th>Name</th>
             <th>Veggy</th>
-            <th>Signed up at</th>
+            <th class="visible-lg visible-md">Signed up at</th>
+            <th>Note</th>
             <th>&nbsp;</th>
             </thead>
             <tbody>
@@ -24,8 +25,11 @@
                                 <i class="fa fa-check"></i>
                             @endif
                         </td>
+                        <td class="table-text visible-lg visible-md">
+                            <div>{{$name->updated_at->toTimeString()}}</div>
+                        </td>
                         <td class="table-text">
-                            <div>{{$name->created_at->toTimeString()}}</div>
+                            <div>{{$name->pivot->note}}</div>
                         </td>
 
                         <!-- Task Delete Button -->
@@ -59,7 +63,8 @@
             <thead>
             <th>Name</th>
             <th>Veggy</th>
-            <th>Signed up at</th>
+            <th class="visible-lg visible-md">Signed up at</th>
+            <th>Note</th>
             <th>&nbsp;</th>
             </thead>
             <tbody>
@@ -75,8 +80,11 @@
                                 <i class="fa fa-check"></i>
                             @endif
                         </td>
+                        <td class="table-text visible-lg visible-md">
+                            <div>{{$name->updated_at->toTimeString()}}</div>
+                        </td>
                         <td class="table-text">
-                            <div>{{$name->created_at->toTimeString()}}</div>
+                            <div>{{$name->pivot->note}}</div>
                         </td>
 
                         <!-- Task Delete Button -->

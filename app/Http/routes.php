@@ -18,5 +18,6 @@ Route::group(['middleware' => ['web', 'auth.basic']], function () {
 
     /**
      * @todo remove veggy if veggy person is removed from list
+     * @todo prevent double name entry
      */
 });
