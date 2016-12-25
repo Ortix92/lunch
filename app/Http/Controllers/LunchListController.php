@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\LunchList;
 use App\Name;
 use App\Note;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -91,7 +90,12 @@ class LunchListController extends Controller
 
         // Create a new name and fill the attributes
         $name = Name::firstOrNew(['name' => $request->input('name')]);
-        $name->persist = $request->input('persist', 0);
+
+        // We only update the persistence of the user in the case that the list is not a dinner list
+        if (!$lunchlist->dinner) {
+            $name->persist = $request->input('persist', 0);
+        }
+
         $name->veggy = $request->input('veggy', 0);
         $name->touch(); // Update timestamp
 

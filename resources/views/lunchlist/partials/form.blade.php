@@ -5,14 +5,14 @@
 
     <div class="panel-body">
         <!-- Display Validation Errors -->
-        @include('common.errors')
+    @include('common.errors')
 
-                <!-- New Task Form -->
+    <!-- New Task Form -->
 
         <form action="{{route('lunchlist.store')}}" method="POST" class="form-horizontal">
-            {{ csrf_field() }}
+        {{ csrf_field() }}
 
-                    <!-- Name -->
+        <!-- Name -->
             <div class="form-group">
                 <label for="task-name" class="col-sm-3 control-label">Name</label>
 
@@ -22,12 +22,14 @@
                 </div>
 
             </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label" for="persist-box">Full-time Member</label>
-                <div class="col-sm-2">
-                    <input type="checkbox" id="persist-box" name="persist" value="1">
+            @if(!$lunchlist->dinner)
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="persist-box">Full-time Member</label>
+                    <div class="col-sm-2">
+                        <input type="checkbox" id="persist-box" name="persist" value="1">
+                    </div>
                 </div>
-            </div>
+            @endif
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="veggy-box">Veggy</label>
                 <div class="col-sm-2">
