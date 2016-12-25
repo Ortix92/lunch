@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\LunchList;
 use App\Name;
 use App\Note;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class LunchListController
@@ -17,6 +14,14 @@ use Illuminate\Support\Facades\DB;
  */
 class LunchListController extends Controller
 {
+    protected $lunchList;
+
+    public function __construct(LunchList $lunchList)
+    {
+        $this->lunchList = $lunchList;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +30,8 @@ class LunchListController extends Controller
     public function index()
     {
         $lunchlists = LunchList::orderBy('id', 'desc')->with('names')->paginate(10);
-        return view('lunchlist.index', compact('lunchlists'));
+        $hasOpen = $this->lunchList->hasOpen();
+        return view('lunchlist.index', compact('lunchlists', 'hasOpen'));
     }
 
     /**
@@ -35,30 +41,29 @@ class LunchListController extends Controller
      */
     public function create()
     {
-        \DB::connection()->enableQueryLog();
-        // We get the lunchlist of the day which is still open.
-        // If it's already closed an empty collection will be returned allowing us to create a new one!
-        $q = LunchList::where('opened_on', '>=', Carbon::today())->where(function ($query) {
-            $query->whereNull('closed_on')->orWhere('closed', '<>', 1);
-        });
-
-        // Let's lazy load the names as well to reduce queries
-        $q->with('names');
-        $result = $q->get();
-//        dd(\DB::getQueryLog());
-        if ($result->isEmpty()) {
-            // Touch timestamps
-            DB::table('names')->where('persist', '=', 1)->update(['updated_at' => Carbon::now()]);
-
-            // Get all the persistent names
-            // @todo combine these 2 statements into a single query
-            $persistentNames = DB::table('names')->where('persist', '=', 1)->lists('id');
-            $lunchlist = new LunchList;
-            $lunchlist->save();
-            $lunchlist->names()->attach($persistentNames);
-        } else {
-            $lunchlist = $result->first();
+        // In case user tries to open a new lunchlist while another one is open
+        // redirect to the first open list. We sacrifice 'speed' for readability here
+        // since all these queries and routines can be combined.
+        $lunchlist = $this->lunchList->getFirstOpenList();
+        if ($lunchlist) {
+            return redirect()->route('lunchlist.edit', $lunchlist->id);
         }
+        \DB::connection()->enableQueryLog();
+//        dd(\DB::getQueryLog());
+
+        $lunchlist = new LunchList;
+        $lunchlist->save();
+
+        // In case we have a dinner list we want a fresh list without the persistent names
+        if (request('dinner')) {
+            $lunchlist->dinner = 1;
+            $lunchlist->save();
+            return view('lunchlist.edit', compact('lunchlist'));
+        }
+
+        // Otherwise we run some hidden uggly queries and attach the names to the list
+        $lunchlist->attachNames();
+
         return view('lunchlist.edit', compact('lunchlist'));
     }
 
@@ -81,11 +86,16 @@ class LunchListController extends Controller
             ]
         );
 
-        $lunchlist = LunchList::findorFail($request->input('id'));
+        $lunchlist = $this->lunchList->findorFail($request->input('id'));
 
         // Create a new name and fill the attributes
         $name = Name::firstOrNew(['name' => $request->input('name')]);
-        $name->persist = $request->input('persist', 0);
+
+        // We only update the persistence of the user in the case that the list is not a dinner list
+        if (!$lunchlist->dinner) {
+            $name->persist = $request->input('persist', 0);
+        }
+
         $name->veggy = $request->input('veggy', 0);
         $name->touch(); // Update timestamp
 
@@ -105,7 +115,7 @@ class LunchListController extends Controller
      */
     public function edit($id)
     {
-        $lunchlist = LunchList::findOrFail($id);
+        $lunchlist = $this->lunchList->findOrFail($id);
 
         return view('lunchlist.edit', compact('lunchlist'));
     }
@@ -123,7 +133,7 @@ class LunchListController extends Controller
 
     public function close($id)
     {
-        $lunchlist = LunchList::findOrFail($id);
+        $lunchlist = $this->lunchList->findOrFail($id);
         $lunchlist->close();
         $lunchlist->save();
         return redirect()->route('lunchlist.show', [$id]);
@@ -137,7 +147,7 @@ class LunchListController extends Controller
      */
     public function destroy($id)
     {
-        $lunchlist = LunchList::findOrFail($id);
+        $lunchlist = $this->lunchList->findOrFail($id);
         $lunchlist->names()->detach();
         $lunchlist->delete();
         return redirect('/');

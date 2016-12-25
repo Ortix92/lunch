@@ -3,6 +3,11 @@
 @section('content')
     <div class="container">
         <div class="col-sm-offset-2 col-sm-8">
+            @if($lunchlist->dinner)
+                <div class="alert alert-warning" role="alert">
+                    <strong>Attention!</strong> This is a dinner list!
+                </div>
+            @endif
             @if($lunchlist->closed)
                 <div class="secret_button alert alert-danger alert-dismissible fade in">
                     This lunchlist has been closed.
