@@ -29,7 +29,7 @@ class LunchListController extends Controller
      */
     public function index()
     {
-        $lunchlists = LunchList::orderBy('id', 'desc')->with('names')->paginate(2);
+        $lunchlists = LunchList::orderBy('id', 'desc')->with('names')->paginate(10);
         $hasOpen = $this->lunchList->hasOpen();
         return view('lunchlist.index', compact('lunchlists', 'hasOpen'));
     }
