@@ -3,6 +3,14 @@
 @section('content')
     <div class="container">
         <div class="col-sm-offset-2 col-sm-8">
+{{--            {{dd(session()->all())}}--}}
+            @if(session()->has('status'))
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    {!! session('status') !!}
+                </div>
+            @endif
             @if($lunchlist->dinner)
                 <div class="alert alert-warning" role="alert">
                     <strong>Attention!</strong> This is a dinner list!

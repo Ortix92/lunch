@@ -6,11 +6,11 @@
     <div class="panel-body">
         <table class="table table-striped task-table">
             <thead>
-            <th>Name</th>
-            <th>Veggy</th>
-            <th class="visible-lg visible-md">Signed up at</th>
-            <th>Note</th>
-            <th>&nbsp;</th>
+            <th class="col-xs-2">Name</th>
+            <th class="col-xs-1">Veggy</th>
+            <th class="visible-lg visible-md col-xs-2">Signed up at</th>
+            <th class="col-xs-5s">Note</th>
+            <th class="col-xs-2">&nbsp;</th>
             </thead>
             <tbody>
 
@@ -34,17 +34,7 @@
 
                         <!-- Task Delete Button -->
                         <td>
-                            <form action="{{route('name.destroy',[$name->id, 'list_id'=>$lunchlist->id])}}"
-                                  method="POST">
-                                {{ csrf_field() }}
-                                {{ method_field('DELETE') }}
-
-                                @if(!$lunchlist->closed)
-                                    <button type="submit" class="btn btn-danger">
-                                        <i class="fa fa-btn fa-trash"></i>Delete
-                                    </button>
-                                @endif
-                            </form>
+                            @include('lunchlist.partials.removename')
                         </td>
                     </tr>
                 @endif
@@ -61,11 +51,11 @@
     <div class="panel-body">
         <table class="table table-striped task-table">
             <thead>
-            <th>Name</th>
-            <th>Veggy</th>
-            <th class="visible-lg visible-md">Signed up at</th>
-            <th>Note</th>
-            <th>&nbsp;</th>
+            <th class="col-xs-2">Name</th>
+            <th class="col-xs-1">Veggy</th>
+            <th class="visible-lg visible-md col-xs-2">Signed up at</th>
+            <th class="col-xs-5s">Note</th>
+            <th class="col-xs-2">&nbsp;</th>
             </thead>
             <tbody>
 
@@ -89,17 +79,7 @@
 
                         <!-- Task Delete Button -->
                         <td>
-                            <form action="{{route('name.destroy',[$name->id, 'list_id'=>$lunchlist->id])}}"
-                                  method="POST">
-                                {{ csrf_field() }}
-                                {{ method_field('DELETE') }}
-
-                                @if(!$lunchlist->closed)
-                                    <button type="submit" class="btn btn-danger">
-                                        <i class="fa fa-btn fa-trash"></i>Delete
-                                    </button>
-                                @endif
-                            </form>
+                            @include('lunchlist.partials.unpersist',['persist' => '0'])
                         </td>
                     </tr>
                 @endif
