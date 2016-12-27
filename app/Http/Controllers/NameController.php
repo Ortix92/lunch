@@ -42,13 +42,14 @@ class NameController extends Controller
         // Remove entry from the pivot table
         $name->lunchLists()->detach($request->list_id);
 
-        // @todo message flashing on user delete not working
         if ($name->persist) {
-            $request->session()->flash('status', ucfirst($name->name) . ' has been removed from the current list.');
+            $request->session()
+                ->flash('status', ucfirst($name->name) . ' has been removed from the current list.');
         } else {
-            $request->session()->flash('status', ucfirst($name->name) . ' has been unsubscribed from all lunch lists');
+            $request->session()
+                ->flash('status', ucfirst($name->name) . ' has been unsubscribed from all lunch lists.');
         }
-        return redirect()->route('lunchlist.show', ['lunch_id' => $request->list_id]);
+        return redirect()->route('lunchlist.edit', ['lunch_id' => $request->list_id]);
     }
 
 }

@@ -91,6 +91,11 @@ class LunchListController extends Controller
         // Create a new name and fill the attributes
         $name = Name::firstOrNew(['name' => $request->input('name')]);
 
+        // To prevent crazy bugs we do not allow duplicate names anymore
+        if ($name->exists) {
+            return redirect()->route('lunchlist.edit', $lunchlist->id)->with('status', 'Name already exists');
+        }
+
         // We only update the persistence of the user in the case that the list is not a dinner list
         if (!$lunchlist->dinner) {
             $name->persist = $request->input('persist', 0);
