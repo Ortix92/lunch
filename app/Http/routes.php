@@ -1,6 +1,8 @@
 <?php
 Route::group(['middleware' => ['web', 'auth.basic']], function () {
 
+    Route::resource('stats','StatController');
+
     Route::get('test', function () {
         $lunchlist = \App\LunchList::find(33);
         dd($lunchlist->names()->detach());
