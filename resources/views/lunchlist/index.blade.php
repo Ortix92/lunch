@@ -5,13 +5,13 @@
         <div class="col-sm-offset-2 col-sm-8">
             <!-- Display Validation Errors -->
             @include('common.errors')
-            @if(!$hasOpen)
+            {{--@if(!$hasOpen)--}}
                 <p class="button-group">
                     <a href="{{route('lunchlist.create',['dinner'=>'0'])}}" class="btn btn-primary btn-lg">New Lunch List</a>
                     <a href="{{route('lunchlist.create',['dinner'=>'1'])}}" class="btn btn-warning btn-lg">New Dinner List</a>
 
                 </p>
-            @endif
+            {{--@endif--}}
             <div class="panel panel-default">
                 <div class="panel-heading">Lunch List Overview</div>
                 <table class="table">

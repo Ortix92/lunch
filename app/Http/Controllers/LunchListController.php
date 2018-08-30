@@ -44,10 +44,10 @@ class LunchListController extends Controller
         // In case user tries to open a new lunchlist while another one is open
         // redirect to the first open list. We sacrifice 'speed' for readability here
         // since all these queries and routines can be combined.
-        $lunchlist = $this->lunchList->getFirstOpenList();
-        if ($lunchlist) {
-            return redirect()->route('lunchlist.edit', $lunchlist->id);
-        }
+//        $lunchlist = $this->lunchList->getFirstOpenList();
+//        if ($lunchlist) {
+//            return redirect()->route('lunchlist.edit', $lunchlist->id);
+//        }
         \DB::connection()->enableQueryLog();
 //        dd(\DB::getQueryLog());
 
