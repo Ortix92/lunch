@@ -51,13 +51,13 @@ class LunchListController extends Controller
         $lunchlist2 = $this->lunchList->getLastOpenList();
 
 
-        // If the first list exists and is what we are trying to create, edit it.
+        // If the first list exists and is what we are trying to create, edit it instead.
         if ($lunchlist1) {
             if(($lunchlist1->dinner and request('dinner') )or (!$lunchlist1->dinner and !request('dinner')))
             return redirect()->route('lunchlist.edit', $lunchlist1->id);
         }
 
-        // If the last list exists and is what we are trying to create, edit it.
+        // If the last list exists and is what we are trying to create, edit it instead.
         if ($lunchlist2) {
             if(($lunchlist2->dinner and request('dinner') )or (!$lunchlist2->dinner and !request('dinner')))
                 return redirect()->route('lunchlist.edit', $lunchlist2->id);
