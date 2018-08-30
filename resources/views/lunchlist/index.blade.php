@@ -18,6 +18,7 @@
                     <thead>
                     <tr>
                         <th>#</th>
+                        <th></th>
                         <th>Opened On</th>
                         <th>Closed On</th>
                         <th>Amount</th>
@@ -28,6 +29,11 @@
                     @foreach($lunchlists as $list)
                         <tr>
                             <th scope="row">{{$list->id}}</th>
+                            @if($list->dinner)
+                                <td><div style="left:2px; position: relative;" class="fa fa-cutlery"></div></td>
+                            @else
+                                <td><div class="fa fa-coffee"></div></td>
+                            @endif
                             <td><a href="{{route('lunchlist.edit',[$list->id])}}">{{$list->opened_on}}</a></td>
                             <td>{{$list->closed_on}}</td>
                             <td>{{count($list->names)}}</td>
