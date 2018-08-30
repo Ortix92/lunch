@@ -60,6 +60,11 @@ class LunchList extends \Eloquent
         return $this->queryOpenLists()->first();
     }
 
+    public function getLastOpenList()
+    {
+        return $this->queryOpenLists()->orderBy('opened_on', 'DESC')->first();
+    }
+
     public function close()
     {
         $this->attributes['closed'] = 1;
