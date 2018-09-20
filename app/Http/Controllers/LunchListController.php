@@ -44,10 +44,28 @@ class LunchListController extends Controller
         // In case user tries to open a new lunchlist while another one is open
         // redirect to the first open list. We sacrifice 'speed' for readability here
         // since all these queries and routines can be combined.
-        $lunchlist = $this->lunchList->getFirstOpenList();
-        if ($lunchlist) {
-            return redirect()->route('lunchlist.edit', $lunchlist->id);
+
+        // Bandaid fix.
+        // Assume there can only be 2 lists open.
+        $lunchlist1 = $this->lunchList->getFirstOpenList();
+        $lunchlist2 = $this->lunchList->getLastOpenList();
+
+
+        // If the first list exists and is what we are trying to create, edit it instead.
+        if ($lunchlist1) {
+            if(($lunchlist1->dinner and request('dinner') )or (!$lunchlist1->dinner and !request('dinner')))
+            return redirect()->route('lunchlist.edit', $lunchlist1->id);
         }
+
+        // If the last list exists and is what we are trying to create, edit it instead.
+        if ($lunchlist2) {
+            if(($lunchlist2->dinner and request('dinner') )or (!$lunchlist2->dinner and !request('dinner')))
+                return redirect()->route('lunchlist.edit', $lunchlist2->id);
+        }
+
+        // Now only 1 list of each type can exist, so there can only be 2 lists open :)
+        // 3 years Computer Science totally worth it.
+
         \DB::connection()->enableQueryLog();
 //        dd(\DB::getQueryLog());
 

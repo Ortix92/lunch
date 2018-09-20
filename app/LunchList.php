@@ -21,9 +21,8 @@ class LunchList extends \Eloquent
 
     public function names()
     {
-        return $this->belongsToMany('App\Name', 'list_name', 'list_id', 'name_id')->withPivot('note');
+        return $this->belongsToMany('App\Name', 'list_name', 'list_id', 'name_id')->withPivot('note')->orderBy('name');
     }
-
 
     /**
      * @return bool true in case there exists a lunch list which is still open and has been created today
@@ -58,6 +57,11 @@ class LunchList extends \Eloquent
     public function getFirstOpenList()
     {
         return $this->queryOpenLists()->first();
+    }
+
+    public function getLastOpenList()
+    {
+        return $this->queryOpenLists()->orderBy('opened_on', 'DESC')->first();
     }
 
     public function close()
